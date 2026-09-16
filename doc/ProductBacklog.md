@@ -27,9 +27,9 @@ The development process is organized into iterations (Sprints), with User Storie
 
 # 3. User Stories
 
-## E01 — Product Search
+## E01 - Product Search
 
-### US-01 — Search for a Product
+### US-01 - Search for a Product
 
 **As a** user
 **I want** to search for a product by name or model
@@ -47,7 +47,7 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-### US-02 — View Search Results
+### US-02 - View Search Results
 
 **As a** user
 **I want** to view the products found by Pricey
@@ -64,9 +64,9 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-## E02 — Search and Filtering
+## E02 - Search and Filtering
 
-### US-03 — Filter Search Results
+### US-03 - Filter Search Results
 
 **As a** user
 **I want** to specify additional product parameters
@@ -83,7 +83,7 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-### US-04 — Set a Maximum Price
+### US-04 - Set a Maximum Price
 
 **As a** user
 **I want** to specify a maximum price
@@ -100,9 +100,9 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-## E03 — Price Monitoring
+## E03 - Price Monitoring
 
-### US-05 — Select Sites to Monitor
+### US-05 - Select Sites to Monitor
 
 **As a** user
 **I want** to select one or more websites from the search results
@@ -119,7 +119,7 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-### US-06 — Monitor Multiple Products
+### US-06 - Monitor Multiple Products
 
 **As a** user
 **I want** to monitor multiple products simultaneously
@@ -137,7 +137,7 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-### US-07 — Periodically Check Prices
+### US-07 - Periodically Check Prices
 
 **As** a user
 **I want** Pricey to periodically check the prices of the products I am monitoring
@@ -154,7 +154,7 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-### US-08 — Configure Monitoring Preferences
+### US-08 - Configure Monitoring Preferences
 
 **As** a user
 **I want** to configure the preferences associated with a monitored product
@@ -171,9 +171,9 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-## E04 — Notifications
+## E04 - Notifications
 
-### US-09 — Configure Price Drop Threshold
+### US-09 - Configure Price Drop Threshold
 
 **As** a user
 **I want** to configure the minimum percentage decrease required to trigger a notification
@@ -190,7 +190,7 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-### US-10 — Detect a Relevant Price Decrease
+### US-10 - Detect a Relevant Price Decrease
 
 **As** a user
 **I want** Pricey to detect when the price of a monitored product decreases by at least my configured threshold
@@ -207,7 +207,7 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-### US-11 — Receive a Price Drop Notification
+### US-11 - Receive a Price Drop Notification
 
 **As a** user
 **I want** to receive a notification when a monitored product reaches my configured price drop threshold
@@ -225,9 +225,9 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-## E05 — User Management
+## E05 - User Management
 
-### US-12 — Create an Account
+### US-12 - Create an Account
 
 **As a** user
 **I want** to create a Pricey account
@@ -244,7 +244,7 @@ The development process is organized into iterations (Sprints), with User Storie
 
 ---
 
-### US-13 — Log In
+### US-13 - Log In
 
 **As a** registered user
 **I want** to log in to my Pricey account

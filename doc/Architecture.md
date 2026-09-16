@@ -20,7 +20,7 @@
 **Sprint:** 1  
 **Stato:** To Do
 
-### US-02 — Specificare filtri
+### US-02 - Specificare filtri
 
 **Come** utente  
 **voglio** specificare alcuni parametri del prodotto  
