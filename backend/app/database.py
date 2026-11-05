@@ -24,3 +24,4 @@ def get_session() -> Generator[Session, None, None]:
     """Dependency for providing a transactional database session."""
     with Session(engine) as session:
         yield session
+

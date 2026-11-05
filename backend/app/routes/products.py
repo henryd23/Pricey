@@ -53,3 +53,4 @@ async def lookup_url(req: LookupUrlRequest):
         )
 
     return product
+

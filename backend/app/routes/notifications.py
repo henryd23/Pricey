@@ -59,3 +59,4 @@ def mark_all_as_read(session: Session = Depends(get_session)):
         session.add(n)
     session.commit()
     return {"message": f"Marked {len(notifications)} notifications as read"}
+

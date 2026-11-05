@@ -50,14 +50,21 @@ Questo documento definisce la roadmap incrementale e iterativa per lo sviluppo d
 - [x] Test di integrazione API automatizzati (`tests/test_api.py`) con coverage completo su tutte le route.
 
 ### Fase 3 — Frontend V1 (UI Interattiva & Dashboard)
-- [ ] Pagina di Ricerca / Inserimento URL:
-  - Barra per ricerca libera o inserimento link diretto.
-  - Card di risultato con confronto store e prezzi rilevati.
-  - Modale o tasto *"Aggiungi al monitoraggio"* con impostazione soglia delta (default 5%).
-- [ ] Dashboard Prodotti Monitorati:
-  - Card o tabella dei prodotti attivi con indicatore di calo/aumento di prezzo.
-  - Dettaglio prodotto con grafico storico prezzi.
-  - Centro notifiche in-app.
+- [x] Pagina di Ricerca / Inserimento URL (`SearchView.jsx`):
+  - Barra per ricerca libera per nome o inserimento link diretto URL.
+  - Filtro opzionale per prezzo massimo (`max_price`).
+  - Card di risultato per ciascun prodotto trovato con store, prezzo e link originale.
+  - Modale interattiva "Monitora Prezzo" (`TrackModal.jsx`) con selettore percentuale di sconto (preset -5%, -10%, -15%, -20% o slider continuo) e calcolo dinamico del risparmio.
+- [x] Dashboard Prodotti Monitorati (`DashboardView.jsx`):
+  - Banner metriche (totale prodotti, soglia predefinita, stato).
+  - Card dettagliate per ciascun prodotto monitorato con indicatore percentuale di calo.
+  - Visualizzatore grafico storico prezzi reattivo in SVG (`PriceChart.jsx`).
+  - Modifica rapida della soglia alert ed eliminazione dal tracking.
+- [x] Centro Notifiche (`NotificationsView.jsx`):
+  - Elenco avvisi calo prezzi con vecchio prezzo, nuovo prezzo e delta percentuale.
+  - Badge conteggio notifiche non lette in tempo reale nella navbar.
+  - Azioni per segnare le notifiche come lette singolarmente o tutte insieme.
+- [x] Sistema di feedback visivo Toast e configurazione proxy Vite verso FastAPI.
 
 ### Fase 4 — Background Scheduler & Notifiche
 - [ ] Integrazione di `APScheduler` nel ciclo di vita di FastAPI.

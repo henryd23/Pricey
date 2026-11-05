@@ -1,122 +1,127 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import { Search, Eye, Bell, Tag, Sparkles, Check } from 'lucide-react';
+import SearchView from './components/SearchView';
+import DashboardView from './components/DashboardView';
+import NotificationsView from './components/NotificationsView';
+import TrackModal from './components/TrackModal';
+import { getUnreadNotificationsCount, trackProduct } from './api';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [activeTab, setActiveTab] = useState('search'); // 'search' | 'dashboard' | 'notifications'
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [modalProduct, setModalProduct] = useState(null);
+  const [toastMessage, setToastMessage] = useState(null);
+
+  const fetchUnread = async () => {
+    try {
+      const data = await getUnreadNotificationsCount();
+      setUnreadCount(data.unread_count || 0);
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  useEffect(() => {
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 30000); // Poll unread count every 30s
+    return () => clearInterval(interval);
+  }, []);
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const handleTrackConfirm = async (payload) => {
+    await trackProduct(payload);
+    showToast(`"${payload.title.slice(0, 30)}..." aggiunto al monitoraggio!`);
+    fetchUnread();
+    setActiveTab('dashboard'); // Switch to dashboard to see tracked product
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app-shell">
+      {/* Navigation Header */}
+      <header className="navbar">
+        <div className="navbar-container">
+          <div className="brand" onClick={() => setActiveTab('search')}>
+            <div className="brand-logo-icon">
+              <Tag size={22} className="text-white" />
+            </div>
+            <div>
+              <h1 className="brand-title">Pricey</h1>
+              <span className="brand-tagline">Price Tracker & Smart Alerts</span>
+            </div>
+          </div>
 
-      <div className="ticks"></div>
+          <nav className="nav-links">
+            <button
+              className={`nav-btn ${activeTab === 'search' ? 'active' : ''}`}
+              onClick={() => setActiveTab('search')}
+            >
+              <Search size={18} />
+              <span>Cerca & Traccia</span>
+            </button>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+            <button
+              className={`nav-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
+              onClick={() => setActiveTab('dashboard')}
+            >
+              <Eye size={18} />
+              <span>Monitorati</span>
+            </button>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+            <button
+              className={`nav-btn ${activeTab === 'notifications' ? 'active' : ''}`}
+              onClick={() => setActiveTab('notifications')}
+            >
+              <div className="icon-with-badge">
+                <Bell size={18} />
+                {unreadCount > 0 && <span className="badge-pill">{unreadCount}</span>}
+              </div>
+              <span>Notifiche</span>
+            </button>
+          </nav>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="main-content">
+        <div className="content-container">
+          {activeTab === 'search' && (
+            <SearchView onTrackClick={(product) => setModalProduct(product)} />
+          )}
+
+          {activeTab === 'dashboard' && (
+            <DashboardView
+              onNavigateToSearch={() => setActiveTab('search')}
+              onShowToast={showToast}
+            />
+          )}
+
+          {activeTab === 'notifications' && (
+            <NotificationsView onNotificationsUpdated={fetchUnread} />
+          )}
+        </div>
+      </main>
+
+      {/* Track Product Modal */}
+      {modalProduct && (
+        <TrackModal
+          product={modalProduct}
+          onClose={() => setModalProduct(null)}
+          onConfirm={handleTrackConfirm}
+        />
+      )}
+
+      {/* Toast Alert */}
+      {toastMessage && (
+        <div className="toast-notification">
+          <Check size={18} className="text-green" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+    </div>
+  );
 }
-
-export default App
