@@ -80,3 +80,4 @@ class AppleScraper(BaseScraper):
             sku=None,
             raw_price=raw_price,
         )
+
