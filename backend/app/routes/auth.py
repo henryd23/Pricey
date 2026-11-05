@@ -115,3 +115,4 @@ def get_my_profile(current_user: User = Depends(get_current_user)):
         full_name=current_user.full_name,
         created_at=current_user.created_at,
     )
+

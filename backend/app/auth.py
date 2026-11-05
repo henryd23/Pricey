@@ -96,3 +96,4 @@ def get_optional_current_user(
         return session.get(User, int(user_id_str))
     except jwt.PyJWTError:
         return None
+

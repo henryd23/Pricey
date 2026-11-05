@@ -5,6 +5,7 @@ from scraper.utils import parse_price
 from scraper.manager import ScraperManager
 from scraper.amazon import AmazonScraper
 from scraper.ikea import IkeaScraper
+from scraper.apple import AppleScraper
 
 
 def test_parse_price_formats():
@@ -22,10 +23,12 @@ def test_scraper_dispatch():
     
     amazon_url = "https://www.amazon.it/dp/B08N5WRWNW"
     ikea_url = "https://www.ikea.com/it/it/p/billy-libreria-bianco-00263850/"
+    apple_url = "https://www.apple.com/it/shop/buy-iphone/iphone-15"
     random_url = "https://www.kasanova.com/it/prodotto-test.html"
 
     assert isinstance(manager.get_scraper_for_url(amazon_url), AmazonScraper)
     assert isinstance(manager.get_scraper_for_url(ikea_url), IkeaScraper)
+    assert isinstance(manager.get_scraper_for_url(apple_url), AppleScraper)
     assert manager.get_scraper_for_url(random_url) == manager.fallback_scraper
 
 

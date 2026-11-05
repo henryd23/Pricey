@@ -88,7 +88,11 @@ Questo documento definisce la roadmap incrementale e iterativa per lo sviluppo d
 - [x] Test di integrazione automatizzati (`tests/test_auth.py`) su registrazione, login, token Bearer e isolamento prodotti.
 
 ### Fase 6 — Espansione Store, Filtri Avanzati & Rifiniture
-- [ ] Scraper aggiuntivi (Amazon, MediaWorld, Unieuro, con gestione bot/header o fallback).
-- [ ] Filtri avanzati: prezzo massimo, filtro store, categorie.
-- [ ] Configurazione Docker Compose completa (Backend + Frontend + PostgreSQL) pronta al deploy.
+- [x] Scraper dedicati ed espansione: Ikea (ricerca e dettagli), Apple Store (`scraper/apple.py`), Amazon (preparato per ASIN e selettori), e fallback universale Schema.org/OpenGraph (`scraper/generic.py`).
+- [x] Filtro prezzo massimo (`max_price`) integrato in ricerca e UI.
+- [x] Containerizzazione Docker completa:
+  - `backend/Dockerfile`: immagine Python 3.12 con FastAPI e uvicorn.
+  - `frontend/Dockerfile` & `frontend/nginx.conf`: multi-stage build con Nginx e reverse proxy `/api/`.
+  - `docker-compose.yml`: orchestrazione multi-servizio (Backend + Frontend Nginx + volume dati persistente).
+- [x] Documentazione aggiornata in `README.md` con guide all'avvio in locale e con Docker Compose.
 

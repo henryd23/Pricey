@@ -144,3 +144,4 @@ def test_user_tracked_items_isolation(client: TestClient):
     # User 2 sees 0 products (isolated)
     list2 = client.get("/api/tracked", headers=headers2).json()
     assert len(list2) == 0
+

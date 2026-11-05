@@ -6,6 +6,7 @@ from scraper.base import BaseScraper
 from scraper.models import ScrapedProduct
 from scraper.amazon import AmazonScraper
 from scraper.ikea import IkeaScraper
+from scraper.apple import AppleScraper
 from scraper.generic import GenericScraper
 
 
@@ -15,6 +16,7 @@ class ScraperManager:
         self.specific_scrapers: List[BaseScraper] = [
             AmazonScraper(),
             IkeaScraper(),
+            AppleScraper(),
         ]
         self.fallback_scraper = GenericScraper()
 
