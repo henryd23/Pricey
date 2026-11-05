@@ -1,17 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Eye, Bell, Tag, Sparkles, Check } from 'lucide-react';
+import { Search, Eye, Bell, Tag, Check, User as UserIcon, LogOut, LogIn } from 'lucide-react';
 import SearchView from './components/SearchView';
 import DashboardView from './components/DashboardView';
 import NotificationsView from './components/NotificationsView';
 import TrackModal from './components/TrackModal';
-import { getUnreadNotificationsCount, trackProduct } from './api';
+import AuthModal from './components/AuthModal';
+import {
+  getUnreadNotificationsCount,
+  trackProduct,
+  getMyProfile,
+  logoutUser,
+} from './api';
 import './App.css';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('search'); // 'search' | 'dashboard' | 'notifications'
   const [unreadCount, setUnreadCount] = useState(0);
   const [modalProduct, setModalProduct] = useState(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [user, setUser] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
+
+  // Check authenticated user profile on mount
+  useEffect(() => {
+    getMyProfile().then((userData) => {
+      if (userData) setUser(userData);
+    });
+  }, []);
 
   const fetchUnread = async () => {
     try {
@@ -26,7 +41,7 @@ export default function App() {
     fetchUnread();
     const interval = setInterval(fetchUnread, 30000); // Poll unread count every 30s
     return () => clearInterval(interval);
-  }, []);
+  }, [user]);
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -38,6 +53,12 @@ export default function App() {
     showToast(`"${payload.title.slice(0, 30)}..." aggiunto al monitoraggio!`);
     fetchUnread();
     setActiveTab('dashboard'); // Switch to dashboard to see tracked product
+  };
+
+  const handleLogout = () => {
+    logoutUser();
+    setUser(null);
+    showToast('Logout effettuato con successo');
   };
 
   return (
@@ -83,6 +104,35 @@ export default function App() {
               <span>Notifiche</span>
             </button>
           </nav>
+
+          {/* User Auth Section in Navbar */}
+          <div className="nav-auth-section">
+            {user ? (
+              <div className="user-profile-pill">
+                <div className="user-avatar" title={user.email}>
+                  <UserIcon size={16} />
+                </div>
+                <span className="user-display-name">
+                  {user.full_name || user.email.split('@')[0]}
+                </span>
+                <button
+                  className="btn-icon-subtle danger"
+                  onClick={handleLogout}
+                  title="Disconnetti (Logout)"
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <button
+                className="btn-primary btn-auth-trigger"
+                onClick={() => setShowAuthModal(true)}
+              >
+                <LogIn size={16} />
+                <span>Accedi</span>
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -95,13 +145,17 @@ export default function App() {
 
           {activeTab === 'dashboard' && (
             <DashboardView
+              key={user ? user.id : 'guest'}
               onNavigateToSearch={() => setActiveTab('search')}
               onShowToast={showToast}
             />
           )}
 
           {activeTab === 'notifications' && (
-            <NotificationsView onNotificationsUpdated={fetchUnread} />
+            <NotificationsView
+              key={user ? user.id : 'guest'}
+              onNotificationsUpdated={fetchUnread}
+            />
           )}
         </div>
       </main>
@@ -112,6 +166,17 @@ export default function App() {
           product={modalProduct}
           onClose={() => setModalProduct(null)}
           onConfirm={handleTrackConfirm}
+        />
+      )}
+
+      {/* Auth Modal (Login / Register) */}
+      {showAuthModal && (
+        <AuthModal
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={(userData) => {
+            setUser(userData);
+            showToast(`Bentornato, ${userData.full_name || userData.email}!`);
+          }}
         />
       )}
 

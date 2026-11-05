@@ -38,3 +38,4 @@ def stop_scheduler():
     if scheduler.running:
         scheduler.shutdown(wait=False)
         print("[SCHEDULER] Scheduler stopped.")
+

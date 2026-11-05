@@ -1156,3 +1156,82 @@
   align-items: center;
   gap: 0.75rem;
 }
+
+
+/* Auth Styles */
+.nav-auth-section {
+  display: flex;
+  align-items: center;
+}
+
+.btn-auth-trigger {
+  padding: 0.45rem 0.95rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+}
+
+.user-profile-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 3px 6px 3px 10px;
+  border-radius: 20px;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-display-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auth-modal-card {
+  max-width: 420px;
+}
+
+.form-field {
+  margin-bottom: 1rem;
+}
+
+.form-field .input-label {
+  margin-bottom: 0.35rem;
+  display: block;
+  font-size: 0.85rem;
+}
+
+.auth-toggle-row {
+  margin-top: 1.25rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.btn-text-link {
+  background: transparent;
+  border: none;
+  color: #2563eb;
+  font-weight: 700;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.btn-text-link:hover {
+  color: #1d4ed8;
+}

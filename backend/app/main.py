@@ -13,7 +13,7 @@ if str(BASE_DIR) not in sys.path:
 
 from backend.app.database import init_db
 from backend.app.services.scheduler import start_scheduler, stop_scheduler
-from backend.app.routes import products, tracking, notifications
+from backend.app.routes import products, tracking, notifications, auth
 
 
 @asynccontextmanager
@@ -44,6 +44,7 @@ app.add_middleware(
 )
 
 # Register API Routers
+app.include_router(auth.router)
 app.include_router(products.router)
 app.include_router(tracking.router)
 app.include_router(notifications.router)

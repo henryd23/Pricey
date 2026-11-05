@@ -72,6 +72,7 @@ async def check_all_monitored_items() -> Dict[str, Any]:
                                 f"(-{delta_percent:.1f}%)!"
                             )
                             notification = Notification(
+                                user_id=item.user_id,
                                 item_id=item.id,
                                 message=notif_msg,
                                 old_price=previous_price,
@@ -83,9 +84,13 @@ async def check_all_monitored_items() -> Dict[str, Any]:
                             session.add(notification)
                             stats["notifications_generated"] += 1
 
-                            # Send email notification
+                            # Send email notification to user or default
+                            recipient_email = "user@pricey.local"
+                            if item.user and item.user.email:
+                                recipient_email = item.user.email
+
                             send_price_drop_email(
-                                to_email="user@pricey.local",
+                                to_email=recipient_email,
                                 product_title=item.title,
                                 store_name=item.store_name,
                                 old_price=previous_price,
@@ -108,3 +113,4 @@ async def check_all_monitored_items() -> Dict[str, Any]:
                 print(f"[CHECKER ERROR] Failed to check item {item.id} ({item.title}): {e}")
 
     return stats
+

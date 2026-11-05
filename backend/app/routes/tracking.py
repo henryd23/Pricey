@@ -16,7 +16,9 @@ if str(BASE_DIR) not in sys.path:
 from scraper.manager import ScraperManager
 from backend.app.database import get_session
 from backend.app.services.checker import check_all_monitored_items
+from backend.app.auth import get_optional_current_user
 from backend.app.models import (
+    User,
     MonitoredItem,
     PriceHistory,
     TrackItemRequest,
@@ -49,17 +51,29 @@ async def trigger_price_check():
 
 
 @router.post("", response_model=MonitoredItemRead, status_code=status.HTTP_201_CREATED)
-async def track_item(req: TrackItemRequest, session: Session = Depends(get_session)):
+async def track_item(
+    req: TrackItemRequest,
+    current_user: Optional[User] = Depends(get_optional_current_user),
+    session: Session = Depends(get_session),
+):
     """
     Add a product to monitored items (US-05, US-06, US-08).
     If details are not passed, fetches them live from the URL.
+    Associates the monitored item with the current authenticated user if logged in.
     """
     clean_url = req.url.strip()
     if not clean_url:
         raise HTTPException(status_code=400, detail="Product URL is required")
 
-    # Check if item is already tracked
+    user_id = current_user.id if current_user else None
+
+    # Check if item is already tracked by this user (or globally if no user)
     statement = select(MonitoredItem).where(MonitoredItem.url == clean_url)
+    if user_id is not None:
+        statement = statement.where(MonitoredItem.user_id == user_id)
+    else:
+        statement = statement.where(MonitoredItem.user_id == None)
+
     existing_item = session.exec(statement).first()
 
     if existing_item:
@@ -95,6 +109,7 @@ async def track_item(req: TrackItemRequest, session: Session = Depends(get_sessi
 
     # Create MonitoredItem
     new_item = MonitoredItem(
+        user_id=user_id,
         url=clean_url,
         store_name=store_name,
         title=title,
@@ -127,10 +142,13 @@ async def track_item(req: TrackItemRequest, session: Session = Depends(get_sessi
 @router.get("", response_model=List[MonitoredItemRead])
 def list_tracked_items(
     active_only: bool = True,
+    current_user: Optional[User] = Depends(get_optional_current_user),
     session: Session = Depends(get_session),
 ):
-    """List all monitored products (US-06)."""
+    """List monitored products (US-06), filtered by current user if logged in."""
     statement = select(MonitoredItem)
+    if current_user:
+        statement = statement.where(MonitoredItem.user_id == current_user.id)
     if active_only:
         statement = statement.where(MonitoredItem.is_active == True)
     statement = statement.order_by(MonitoredItem.created_at.desc())

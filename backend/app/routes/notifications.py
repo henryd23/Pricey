@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlmodel import Session, select, func
 from backend.app.database import get_session
-from backend.app.models import Notification, NotificationRead
+from backend.app.auth import get_optional_current_user
+from backend.app.models import User, Notification, NotificationRead
 
 router = APIRouter(prefix="/api/notifications", tags=["Notifications"])
 
@@ -17,10 +18,13 @@ class UnreadCountResponse(BaseModel):
 @router.get("", response_model=List[NotificationRead])
 def list_notifications(
     unread_only: bool = False,
+    current_user: Optional[User] = Depends(get_optional_current_user),
     session: Session = Depends(get_session),
 ):
     """List notifications generated when price drops occur (US-11)."""
     statement = select(Notification)
+    if current_user:
+        statement = statement.where(Notification.user_id == current_user.id)
     if unread_only:
         statement = statement.where(Notification.is_read == False)
     statement = statement.order_by(Notification.created_at.desc())
@@ -28,9 +32,14 @@ def list_notifications(
 
 
 @router.get("/unread-count", response_model=UnreadCountResponse)
-def get_unread_count(session: Session = Depends(get_session)):
+def get_unread_count(
+    current_user: Optional[User] = Depends(get_optional_current_user),
+    session: Session = Depends(get_session),
+):
     """Count of unread notifications for badge counter."""
     statement = select(func.count(Notification.id)).where(Notification.is_read == False)
+    if current_user:
+        statement = statement.where(Notification.user_id == current_user.id)
     count = session.exec(statement).one()
     return UnreadCountResponse(unread_count=count)
 

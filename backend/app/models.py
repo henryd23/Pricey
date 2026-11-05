@@ -13,6 +13,21 @@ def utc_now() -> datetime:
 # Database Tables (SQLModel)
 # ==========================================
 
+class User(SQLModel, table=True):
+    __tablename__ = "users"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    email: str = Field(unique=True, index=True)
+    hashed_password: str
+    full_name: Optional[str] = Field(default=None)
+    is_active: bool = Field(default=True)
+    created_at: datetime = Field(default_factory=utc_now)
+
+    # Relationships
+    monitored_items: List["MonitoredItem"] = Relationship(back_populates="user", cascade_delete=True)
+    notifications: List["Notification"] = Relationship(back_populates="user", cascade_delete=True)
+
+
 class Product(SQLModel, table=True):
     __tablename__ = "products"
 
@@ -31,6 +46,7 @@ class MonitoredItem(SQLModel, table=True):
     __tablename__ = "monitored_items"
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: Optional[int] = Field(default=None, foreign_key="users.id", index=True)
     product_id: Optional[int] = Field(default=None, foreign_key="products.id")
     url: str = Field(index=True)
     store_name: str = Field(index=True)
@@ -50,6 +66,7 @@ class MonitoredItem(SQLModel, table=True):
     last_checked_at: datetime = Field(default_factory=utc_now)
 
     # Relationships
+    user: Optional[User] = Relationship(back_populates="monitored_items")
     product: Optional[Product] = Relationship(back_populates="items")
     price_history: List["PriceHistory"] = Relationship(
         back_populates="item", cascade_delete=True
@@ -75,6 +92,7 @@ class Notification(SQLModel, table=True):
     __tablename__ = "notifications"
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: Optional[int] = Field(default=None, foreign_key="users.id", index=True)
     item_id: int = Field(foreign_key="monitored_items.id", index=True)
     message: str
     old_price: float
@@ -82,6 +100,38 @@ class Notification(SQLModel, table=True):
     delta_percent: float
     is_read: bool = Field(default=False, index=True)
     created_at: datetime = Field(default_factory=utc_now)
+
+    # Relationship
+    user: Optional[User] = Relationship(back_populates="notifications")
+    item: Optional[MonitoredItem] = Relationship(back_populates="notifications")
+
+
+# ==========================================
+# API Request / Response Schemas (Pydantic)
+# ==========================================
+
+class UserRegister(SQLModel):
+    email: str
+    password: str
+    full_name: Optional[str] = None
+
+
+class UserLogin(SQLModel):
+    email: str
+    password: str
+
+
+class UserRead(SQLModel):
+    id: int
+    email: str
+    full_name: Optional[str] = None
+    created_at: datetime
+
+
+class TokenResponse(SQLModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserRead
 
     # Relationship
     item: Optional[MonitoredItem] = Relationship(back_populates="notifications")

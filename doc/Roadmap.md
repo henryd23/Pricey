@@ -80,10 +80,12 @@ Questo documento definisce la roadmap incrementale e iterativa per lo sviluppo d
 - [x] Test automatizzati (`tests/test_scheduler.py`) per la logica di calo prezzo e soglia alert.
 
 ### Fase 5 — Gestione Utenti & Multi-account (Epic 05)
-- [ ] Modello `User` con password hashing (`bcrypt`/`argon2`).
-- [ ] Autenticazione JWT (`/api/auth/register`, `/api/auth/login`, `/api/auth/me`).
-- [ ] Associazione di ogni `MonitoredItem` all'utente autenticato.
-- [ ] Aggiornamento UI Frontend con form di Login/Registrazione e protezione route.
+- [x] Modello `User` con password hashing sicuro con `bcrypt` (`backend/app/auth.py`).
+- [x] Autenticazione con token JWT (`/api/auth/register`, `/api/auth/login`, `/api/auth/me`).
+- [x] Associazione dei prodotti monitorati e delle notifiche all'utente autenticato (`user_id`), con isolamento dei dati per ciascun account.
+- [x] Form modale React per Login / Registrazione con validazione email e password (`AuthModal.jsx`).
+- [x] Gestione token in `localStorage`, persistenza dello stato utente e logout in navbar.
+- [x] Test di integrazione automatizzati (`tests/test_auth.py`) su registrazione, login, token Bearer e isolamento prodotti.
 
 ### Fase 6 — Espansione Store, Filtri Avanzati & Rifiniture
 - [ ] Scraper aggiuntivi (Amazon, MediaWorld, Unieuro, con gestione bot/header o fallback).

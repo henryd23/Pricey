@@ -88,3 +88,4 @@ def send_price_drop_email(
     except Exception as e:
         print(f"[EMAIL SERVICE ERROR] Failed to send email via SMTP: {e}")
         return False
+
