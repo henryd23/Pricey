@@ -14,3 +14,4 @@ class ScrapedProduct(BaseModel):
     is_available: bool = Field(default=True, description="Availability status")
     sku: Optional[str] = Field(default=None, description="Store SKU / ASIN / item identifier")
     raw_price: Optional[str] = Field(default=None, description="Original unparsed price text")
+

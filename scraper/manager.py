@@ -46,3 +46,4 @@ class ScraperManager:
             if isinstance(res, list):
                 aggregated.extend(res)
         return aggregated
+

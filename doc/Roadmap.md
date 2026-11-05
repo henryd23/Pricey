@@ -32,17 +32,22 @@ Questo documento definisce la roadmap incrementale e iterativa per lo sviluppo d
 - [x] Test automatizzati (`pytest`) per parser prezzi, dispatching e fallback.
 
 ### Fase 2 — Backend Core & Modelli Database
-- [ ] Definizione modelli database:
+- [x] Definizione modelli database (SQLModel):
   - `Product`: titolo, brand, categoria, immagine.
-  - `MonitoredItem`: url, store_name, current_price, target_delta_percent, is_active.
+  - `MonitoredItem`: url, store_name, current_price, target_delta_percent, is_active, created_at, last_checked_at.
   - `PriceHistory`: item_id, price, timestamp.
   - `Notification`: message, old_price, new_price, delta_percent, read_status, sent_at.
-- [ ] Endpoint REST:
-  - `POST /api/search`: ricerca prodotti sui siti supportati.
+- [x] Endpoint REST implementati in FastAPI:
+  - `POST /api/search`: ricerca prodotti sui siti supportati con filtro `max_price`.
   - `POST /api/lookup-url`: recupera i dettagli di un prodotto da un URL incollato.
   - `POST /api/tracked`: aggiunge un prodotto/URL al monitoraggio con soglia personalizzata.
   - `GET /api/tracked`: elenca i prodotti monitorati e l'ultimo prezzo.
-  - `GET /api/tracked/{id}/history`: restituisce lo storico prezzi per il grafico.
+  - `GET /api/tracked/{id}`: restituisce lo storico prezzi per il grafico.
+  - `PATCH /api/tracked/{id}/threshold`: aggiorna la soglia delta %.
+  - `DELETE /api/tracked/{id}`: elimina il monitoraggio di un prodotto.
+  - `GET /api/notifications` & `/read`: gestione notifiche in-app.
+- [x] Middleware CORS configurato per accesso da frontend.
+- [x] Test di integrazione API automatizzati (`tests/test_api.py`) con coverage completo su tutte le route.
 
 ### Fase 3 — Frontend V1 (UI Interattiva & Dashboard)
 - [ ] Pagina di Ricerca / Inserimento URL:

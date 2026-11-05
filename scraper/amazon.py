@@ -156,3 +156,4 @@ class AmazonScraper(BaseScraper):
             )
 
         return results
+

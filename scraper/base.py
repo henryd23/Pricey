@@ -45,3 +45,4 @@ class BaseScraper(ABC):
                 return None
         except Exception:
             return None
+
