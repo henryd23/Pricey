@@ -18,17 +18,18 @@ Questo documento definisce la roadmap incrementale e iterativa per lo sviluppo d
 ## 📅 Fasi di Implementazione
 
 ### Fase 0 — Setup, Pulizia e Allineamento Architetturale
-- [ ] Sistemazione della cartella frontend (spostamento da `frontend/frontend` a `frontend/`).
-- [ ] Configurazione del file `.gitignore` globale (Python, Node, DB, file temporanei).
-- [ ] Configurazione ambiente backend (`requirements.txt` con dipendenze base: `fastapi`, `uvicorn`, `sqlmodel`/`sqlalchemy`, `pydantic`, `httpx`, `beautifulsoup4`).
-- [ ] Configurazione file `.env.example` per parametri di configurazione (DB URL, email settings, intervallo check).
+- [x] Sistemazione della cartella frontend (spostamento da `frontend/frontend` a `frontend/`).
+- [x] Configurazione del file `.gitignore` globale (Python, Node, DB, file temporanei).
+- [x] Configurazione ambiente backend (`requirements.txt` con dipendenze base: `fastapi`, `uvicorn`, `sqlmodel`/`sqlalchemy`, `pydantic`, `httpx`, `beautifulsoup4`).
+- [x] Configurazione file `.env.example` per parametri di configurazione (DB URL, email settings, intervallo check).
 
 ### Fase 1 — Core Scraper Engine & Extraction Spike
-- [ ] Definizione dell'interfaccia astratta `BaseScraper`:
+- [x] Definizione dell'interfaccia astratta `BaseScraper`:
   - `search(query: str) -> list[ScrapedProduct]`
   - `get_product_details(url: str) -> ScrapedProduct`
-- [ ] Implementazione del primo scraper pilota affidabile (es. store con HTML strutturato o API accessibile, come Decathlon o Ikea) + parser generico di URL/OpenGraph.
-- [ ] Script o test isolato per validare l'estrazione dati (titolo, prezzo, disponibilità, immagine).
+- [x] Implementazione scraper IKEA (ricerca live via catalogo e scraping diretto URL) + parser universale `GenericScraper` (Schema.org / OpenGraph per store terzi).
+- [x] Modulo Amazon preparato (con gestione e rilevazione sfide anti-bot).
+- [x] Test automatizzati (`pytest`) per parser prezzi, dispatching e fallback.
 
 ### Fase 2 — Backend Core & Modelli Database
 - [ ] Definizione modelli database:
@@ -73,3 +74,4 @@ Questo documento definisce la roadmap incrementale e iterativa per lo sviluppo d
 - [ ] Scraper aggiuntivi (Amazon, MediaWorld, Unieuro, con gestione bot/header o fallback).
 - [ ] Filtri avanzati: prezzo massimo, filtro store, categorie.
 - [ ] Configurazione Docker Compose completa (Backend + Frontend + PostgreSQL) pronta al deploy.
+
