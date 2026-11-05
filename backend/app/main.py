@@ -12,6 +12,7 @@ if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
 from backend.app.database import init_db
+from backend.app.services.scheduler import start_scheduler, stop_scheduler
 from backend.app.routes import products, tracking, notifications
 
 
@@ -19,7 +20,11 @@ from backend.app.routes import products, tracking, notifications
 async def lifespan(app: FastAPI):
     # Initialize SQLite database schema
     init_db()
+    # Start periodic background price checking
+    start_scheduler()
     yield
+    # Stop scheduler on shutdown
+    stop_scheduler()
 
 
 app = FastAPI(

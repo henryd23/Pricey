@@ -15,6 +15,7 @@ if str(BASE_DIR) not in sys.path:
 
 from scraper.manager import ScraperManager
 from backend.app.database import get_session
+from backend.app.services.checker import check_all_monitored_items
 from backend.app.models import (
     MonitoredItem,
     PriceHistory,
@@ -31,6 +32,20 @@ scraper_manager = ScraperManager()
 
 class UpdateThresholdRequest(BaseModel):
     target_delta_percent: float
+
+
+@router.post("/check-now")
+async def trigger_price_check():
+    """
+    Manually triggers an immediate price check cycle for all active monitored items (US-07).
+    Returns summary statistics of the check cycle.
+    """
+    stats = await check_all_monitored_items()
+    return {
+        "status": "success",
+        "message": f"Controllati {stats['checked']} prodotti. Rilevati {stats['drops_detected']} cali di prezzo e generate {stats['notifications_generated']} notifiche.",
+        "stats": stats,
+    }
 
 
 @router.post("", response_model=MonitoredItemRead, status_code=status.HTTP_201_CREATED)

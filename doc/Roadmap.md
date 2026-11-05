@@ -67,14 +67,17 @@ Questo documento definisce la roadmap incrementale e iterativa per lo sviluppo d
 - [x] Sistema di feedback visivo Toast e configurazione proxy Vite verso FastAPI.
 
 ### Fase 4 — Background Scheduler & Notifiche
-- [ ] Integrazione di `APScheduler` nel ciclo di vita di FastAPI.
-- [ ] Task periodico di controllo prezzi:
-  - Esegue lo scrape dei prodotti attivi.
-  - Registra il nuovo prezzo in `PriceHistory`.
+- [x] Integrazione di `APScheduler` asincrono nel ciclo di vita di FastAPI (`lifespan`).
+- [x] Task periodico di controllo prezzi (`backend/app/services/checker.py`):
+  - Verifica tutti i prodotti monitorati attivi.
+  - Registra le variazioni di prezzo in `PriceHistory`.
   - Calcola la variazione percentuale: $\text{delta} = \frac{P_{prev} - P_{new}}{P_{prev}} \times 100$.
-- [ ] Se $\text{delta} \ge \text{target\_delta}$:
-  - Genera notifica in-app nel DB.
-  - Invia notifica email (servizio SMTP configurabile).
+- [x] Rilevazione soglia di calo prezzo ($\text{delta} \ge \text{target\_delta}\%$):
+  - Generazione notifica in-app nel DB (`Notification`).
+  - Invio email notifica HTML tramite `email_service.py` (con supporto SMTP e fallback graceful log).
+- [x] Endpoint `POST /api/tracked/check-now` per forzare il controllo immediato su richiesta.
+- [x] Tasto "Verifica Prezzi Ora" integrato nella Dashboard del Frontend.
+- [x] Test automatizzati (`tests/test_scheduler.py`) per la logica di calo prezzo e soglia alert.
 
 ### Fase 5 — Gestione Utenti & Multi-account (Epic 05)
 - [ ] Modello `User` con password hashing (`bcrypt`/`argon2`).

@@ -11,11 +11,18 @@ import {
   Clock,
 } from 'lucide-react';
 import PriceChart from './PriceChart';
-import { getTrackedItems, getTrackedItemDetail, deleteTrackedItem, updateThreshold } from '../api';
+import {
+  getTrackedItems,
+  getTrackedItemDetail,
+  deleteTrackedItem,
+  updateThreshold,
+  triggerPriceCheckNow,
+} from '../api';
 
 export default function DashboardView({ onNavigateToSearch, onShowToast }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isCheckingNow, setIsCheckingNow] = useState(false);
   const [error, setError] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
   const [expandedDetails, setExpandedDetails] = useState({});
@@ -30,6 +37,19 @@ export default function DashboardView({ onNavigateToSearch, onShowToast }) {
       setError(err.message || 'Errore durante il caricamento dei prodotti.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCheckNow = async () => {
+    setIsCheckingNow(true);
+    try {
+      const res = await triggerPriceCheckNow();
+      onShowToast(res.message);
+      await loadItems();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setIsCheckingNow(false);
     }
   };
 
@@ -123,10 +143,16 @@ export default function DashboardView({ onNavigateToSearch, onShowToast }) {
         </div>
         <div className="metric-box">
           <span className="metric-label">Frequenza Controlli</span>
-          <span className="metric-value text-green">Periodica</span>
+          <span className="metric-value text-green">Ogni 60m</span>
         </div>
-        <button className="btn-refresh" onClick={loadItems} title="Aggiorna lista">
-          <RefreshCw size={18} />
+        <button
+          className="btn-primary btn-check-now"
+          onClick={handleCheckNow}
+          disabled={isCheckingNow}
+          title="Verifica immediatamente i prezzi di tutti i prodotti"
+        >
+          <RefreshCw className={isCheckingNow ? 'spin-icon' : ''} size={16} />
+          {isCheckingNow ? 'Verifica in corso...' : 'Verifica Prezzi Ora'}
         </button>
       </div>
 
@@ -254,3 +280,4 @@ export default function DashboardView({ onNavigateToSearch, onShowToast }) {
     </div>
   );
 }
+

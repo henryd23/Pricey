@@ -40,6 +40,14 @@ export async function getTrackedItems() {
   return res.json();
 }
 
+export async function triggerPriceCheckNow() {
+  const res = await fetch(`${API_BASE}/tracked/check-now`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error('Errore durante la verifica dei prezzi');
+  return res.json();
+}
+
 export async function getTrackedItemDetail(id) {
   const res = await fetch(`${API_BASE}/tracked/${id}`);
   if (!res.ok) throw new Error('Errore nel recupero dello storico prezzi');
@@ -104,3 +112,4 @@ export async function markAllNotificationsRead() {
   if (!res.ok) throw new Error('Errore');
   return res.json();
 }
+

@@ -244,3 +244,4 @@ export default function SearchView({ onTrackClick }) {
     </div>
   );
 }
+

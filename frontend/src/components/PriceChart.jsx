@@ -114,3 +114,4 @@ export default function PriceChart({ history = [], currency = 'EUR' }) {
     </div>
   );
 }
+

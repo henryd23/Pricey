@@ -120,3 +120,4 @@ export default function TrackModal({ product, onClose, onConfirm }) {
     </div>
   );
 }
+
